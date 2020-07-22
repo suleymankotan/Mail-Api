@@ -21,6 +21,8 @@ public class MailSend {
 
     private String text;
 
+    private String subject;
+
     private String toFrom;
 
     private String mailKey;

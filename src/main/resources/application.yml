@@ -2,9 +2,8 @@ server:
   port: 8015
 
 spring:
-
   application:
-    name: authentication-api
+    name: mail-api
   jpa:
     open-in-view: false
     show-sql: false
