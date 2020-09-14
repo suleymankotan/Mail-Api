@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mail-api
+  labels:
+    app: mail-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mail-api
+  template:
+    metadata:
+      labels:
+        app: mail-api
+    spec:
+      containers:
+        - name: mail-api
+          image: mail-api
+          env:
+            - name: DB_URL
+              valueFrom:
+                secretKeyRef:
+                  name: authentication-api
+                  key: db.url
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: authentication-api
+                  key: db.user
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: authentication-api
+                  key: db.pass
+            - name: KEY
+              valueFrom:
+                secretKeyRef:
+                  name: authentication-api
+                  key: mail.key
+          resources:
+            requests:
+              memory: 500Mi
+              cpu: 200m
+            limits:
+              memory: 750Mi
+              cpu: 300m
+          ports:
+            - containerPort: 8015
+          readinessProbe:
+            httpGet:
+              port: 8015
+              path: /actuator/health
+            periodSeconds: 200
+            timeoutSeconds: 200
+          livenessProbe:
+            httpGet:
+              port: 8015
+              path: /actuator/health
+            periodSeconds: 200
+            timeoutSeconds: 200

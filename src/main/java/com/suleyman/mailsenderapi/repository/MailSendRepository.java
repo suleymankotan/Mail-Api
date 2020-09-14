@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface MailSendRepository extends JpaRepository<MailSend,Long> {
-    List<MailSend> findAllByStatus(Long status);
+    List<MailSend> findAllByStatus(Integer status);
 
 }

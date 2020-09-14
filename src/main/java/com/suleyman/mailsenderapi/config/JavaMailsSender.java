@@ -1,32 +1,28 @@
 package com.suleyman.mailsenderapi.config;
 
-import com.suleyman.mailsenderapi.util.Mail;
+import com.suleyman.mailsenderapi.model.Mail;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.mail.DefaultAuthenticator;
+import org.apache.commons.mail.EmailException;
+import org.apache.commons.mail.HtmlEmail;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
+import javax.mail.MessagingException;
 
 @Configuration
 @Slf4j
 public class JavaMailsSender {
 
-    public void sendSimpleMessage(Mail mail, String mailPassword){
+    public void sendSimpleMessage(Mail mail, String mailPassword) throws MessagingException, EmailException {
+        HtmlEmail htmlEmail =new HtmlEmail();
+        htmlEmail.setHostName("smtp.suleymankotan.com");
+        htmlEmail.setSmtpPort(587);
+        htmlEmail.setAuthenticator(new DefaultAuthenticator(mail.getFrom(),mailPassword));
+        htmlEmail.setFrom(mail.getFrom(),"From");
+        htmlEmail.addTo(mail.getTo(),"To");
+        htmlEmail.setSubject(mail.getSubject());
+        htmlEmail.setHtmlMsg(mail.getContent());
 
-        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setHost("smtp.suleymankotan.com");
-        mailSender.setPort(587);
-        mailSender.setUsername(mail.getFrom());
-        mailSender.setPassword(mailPassword);
-
-        // Create an email instance
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setFrom(mail.getFrom());
-        mailMessage.setTo(mail.getTo());
-        mailMessage.setSubject(mail.getSubject());
-        mailMessage.setText(mail.getContent());
-
-        // Send mail
-        mailSender.send(mailMessage);
+        htmlEmail.send();
         log.info("Mail gönderildi. To: "+mail.getTo());
     }
 }

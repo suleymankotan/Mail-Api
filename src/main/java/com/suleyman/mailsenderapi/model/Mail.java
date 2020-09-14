@@ -1,4 +1,4 @@
-package com.suleyman.mailsenderapi.util;
+package com.suleyman.mailsenderapi.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
