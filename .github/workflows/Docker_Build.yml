@@ -61,7 +61,10 @@ jobs:
         run: |
           gcloud container clusters get-credentials prod --zone us-west3-c --project ${{ secrets.GKE_STAGING_PROJECT }}
           cd kustomize/
-          kustomize edit add secret authentication-api --from-literal=mail.key=${{ secrets.Key }}
+          kustomize edit add secret mail-api--from-literal=db.url=${{ secrets.DB_URL }}
+          kustomize edit add secret mail-api --from-literal=db.user=${{ secrets.DB_USER }}
+          kustomize edit add secret mail-api --from-literal=db.pass=${{ secrets.DB_PASS }}
+          kustomize edit add secret mail-api --from-literal=mail.key=${{ secrets.Key }}
           kustomize edit set image mail-api=eu.gcr.io/${{ secrets.GKE_STAGING_PROJECT }}/mail-api:${{ github.sha }}
           kustomize build . | kubectl apply -f -
           kubectl rollout status deployment/mail-api
